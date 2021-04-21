@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AdicionaCampoAssistido extends Migration
+class AdcionaCampoCapaSerie extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AdicionaCampoAssistido extends Migration
      */
     public function up()
     {
-        Schema::table('episodios', function (Blueprint $table) {
-            $table->boolean('assistido')->default(false);
+        Schema::table('series', function (Blueprint $table) {
+            $table->string('capa')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AdicionaCampoAssistido extends Migration
      */
     public function down()
     {
-        Schema::table('episodios', function (Blueprint $table) {
-            $table->dropColumn('assistido');
+        Schema::table('series', function (Blueprint $table) {
+            $table->dropColumn('capa');
         });
     }
 }

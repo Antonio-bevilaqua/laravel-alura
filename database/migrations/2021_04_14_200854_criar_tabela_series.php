@@ -27,6 +27,6 @@ class CriarTabelaSeries extends Migration
      */
     public function down()
     {
-        Schema::drop('series');
+        Schema::dropIfExists('series');
     }
 }

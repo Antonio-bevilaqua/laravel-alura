@@ -10,7 +10,10 @@
     <ul class="list-group">
         @foreach ($series as $serie)
             <li class="list-group-item d-flex justify-content-between">
-                <span class="nome-serie" id="nome-serie-{{ $serie->id }}">{{ $serie->nome }}</span>
+                <div class="inner-Inicio d-flex align-items-center">  
+                    <img src="{{ $serie->capaUrl }}" class="img-thumbnail" width="100px" />
+                    <span class="nome-serie ps-4" id="nome-serie-{{ $serie->id }}">{{ $serie->nome }}</span>
+                </div>
                 @auth('usuario')
                 <div class="input-group w-50 input-nome-serie" hidden id="input-nome-serie{{ $serie->id }}">
                     <input type="text" class="form-control" value="{{ $serie->nome }}">
@@ -22,7 +25,7 @@
                     </div>
                 </div>
                 @endauth
-                <span class="d-flex">
+                <span class="d-flex align-items-center">
                     @auth('usuario')
                     <button class="btn btn-primary btn-sm me-1" onclick="showInputSerie({{ $serie->id }})"><i
                             class="fa fa-edit"></i></button>

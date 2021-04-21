@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NovaSerie as EventsNovaSerie;
 use App\Models\Serie;
-use App\Models\Temporada;
+use App\Mail\NovaSerie;
 use Illuminate\Http\Request;
-use App\Http\Requests\SeriesFormRequest;
-use App\Models\Episodio;
 use App\Services\CriadorDeSeries;
 use App\Services\RemovedorDeSeries;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\SeriesFormRequest;
+use App\Models\User;
 
 class SeriesController extends Controller
 {
@@ -28,7 +30,7 @@ class SeriesController extends Controller
     {
         $serie = Serie::find($id);
 
-        if ($serie){
+        if ($serie) {
             $serie->nome = $request->nome;
             $serie->save();
 
@@ -41,13 +43,25 @@ class SeriesController extends Controller
 
     public function insert(SeriesFormRequest $request, CriadorDeSeries $criadorDeSeries)
     {
+        $capa = ($request->hasFile('capa')) ? $request->file('capa')->store('series') : null;
+
+
         $serie = $criadorDeSeries->criarSerie(
-            $request->nome, 
-            $request->qtd_temporadas, 
+            $request->nome,
+            $request->qtd_temporadas,
+            $request->ep_por_temporada,
+            $capa
+        );
+        
+        $eventoNovaSerie = new EventsNovaSerie(
+            $request->nome,
+            $request->qtd_temporadas,
             $request->ep_por_temporada
         );
 
-        $request->session()->flash('msg-sucesso', "Série #".$serie->id." - ".$serie->nome." e suas temporadas e episódios criados com sucesso!");
+        event($eventoNovaSerie);
+
+        $request->session()->flash('msg-sucesso', "Série #" . $serie->id . " - " . $serie->nome . " e suas temporadas e episódios criados com sucesso!");
 
 
         return redirect()->route('series');
@@ -56,7 +70,7 @@ class SeriesController extends Controller
     public function destroy(int $id, Request $request, RemovedorDeSeries $removedorDeSeries)
     {
         $nomeSerie = $removedorDeSeries->remover($id);
-        if ($nomeSerie !== ""){
+        if ($nomeSerie !== "") {
             $request->session()->flash('msg-sucesso', "Série $nomeSerie removida com sucesso!");
         } else {
             $request->session()->flash('msg-sucesso', "Falha ao remover a série!");

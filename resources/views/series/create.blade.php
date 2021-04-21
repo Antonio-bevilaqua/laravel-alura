@@ -5,7 +5,7 @@ Adcionar série
 @endsection
 
 @section('corpo')
-<form method="post" action="{{route('series.insert')}}">
+<form method="post" action="{{route('series.insert')}}" enctype="multipart/form-data">
     @csrf
     <div class="row">
         <div class="col col-6">
@@ -26,6 +26,15 @@ Adcionar série
             <label for="ep_por_temporada">Ep. por temporada:</label>
             <input type="number" step="1" class="form-control @error('ep_por_temporada') is-invalid @enderror" id="ep_por_temporada" name="ep_por_temporada" placeholder="Nº episodios">
             @error('ep_por_temporada')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col col-12">
+            <label for="capa">Foto de capa:</label>
+            <input type="file" class="form-control @error('capa') is-invalid @enderror" id="capa" name="capa" >
+            @error('capa')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>

@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\EpisodiosController;
 use App\Http\Controllers\TemporadasController;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,4 +70,18 @@ Route::get('/cadastro', [LoginController::class, 'register'])
 Route::post('/cadastro', [LoginController::class, 'create'])
 ->name('autenticacao.cadastro.efetuar');
 
+Route::get('/visualizar-email', function () {
+    return new \App\Mail\NovaSerie("Arrow", 5, 10);
+});
+
+Route::get('/enviando-email', function () {
+    $email = new \App\Mail\NovaSerie("Arrow", 5, 10);
+    $email->subject = "Nova série adcionada";
+    $user = (object)[
+        'email' => 'tonibevila@gmail.com',
+        'name'  => "Antonio"
+    ];
+    Mail::to($user)->send($email);
+    return "Email enviado!";
+});
 #require __DIR__.'/auth.php';
